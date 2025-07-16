@@ -1,10 +1,41 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
+import { useAuth } from '../Context/AuthContext';
+import { login } from '../api/auth';
 
 
 export default function Login() {
+    const navigate = useNavigate();
+    //corection
+    const {setUser,setIsAuthenticated} = useAuth();
+    const[error, setError] = useState('');
+    const[loading, setLoading] =useState(false);
+    
+    async function handleSubmit(e) {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get('email');
+        const password = formData.get('password');
 
+        try{
+            setLoading(true);
+            setError('');
+            const user = await login({email, password});
+            localStorage.setItem('user',JSON.stringify(user));
+            localStorage.setItem('isAuthenticated',true)
+
+            //corrrection
+            setUser(user);
+            setIsAuthenticated(true);
+            navigate('/home')
+        }catch(err){
+            console.log("error:",err);
+            setError('login failed , please try again')
+        }finally{
+            setLoading(false)
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -25,7 +56,7 @@ export default function Login() {
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    <form className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                 Email address
