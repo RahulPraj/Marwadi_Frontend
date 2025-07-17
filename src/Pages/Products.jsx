@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, ShoppingCart } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { getProducts } from "../api/auth";
-import { addToCart, getCart } from "../api/cart";
-import { deleteProduct } from "../api/product";
+import { deleteProduct, getAllProducts } from "../api/product";
+
 
 export default function Products() {
   // 🔹 All necessary state variables
@@ -16,6 +15,56 @@ export default function Products() {
 
   const navigate = useNavigate();
 
+  //fetch all the products
+  async function getProducts() {
+    setLoading(true);
+    setError(null);
+    try{
+        const response = await getAllProducts();
+        setAllProducts(response.products);
+        setFilteredProducts(response.products)
+    }catch(err){
+        setError(err);
+    }finally{
+        setLoading(false)
+    }
+  }
+
+  useEffect(()=>{
+    getProducts();
+  },[])
+
+  //search product 
+  const handleSearch = (e)=>{
+    const term = e.target.value;
+    setSearchTerm(term);
+    if (term.trim() === "") {
+    // If input is empty, show all products again
+    setFilteredProducts(allProducts);
+    return;
+  }
+    const filtered = allProducts.filter((product)=>
+        product.name.toLowerCase().includes(term.toLowerCase() || 
+        product.description.toLowerCase().includes(term.toLowerCase())
+    
+    )
+)
+    setFilteredProducts(filtered);
+
+  }
+
+
+  //delete Product handler
+  const handleDeleteProduct = async(productId)=>{
+    try{
+        await deleteProduct(productId);
+        await getAllProducts()
+    }catch(err){
+        setError(err);
+    }
+  }
+
+  
  
 
   // 🔹 UI Return Part
