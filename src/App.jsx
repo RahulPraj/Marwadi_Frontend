@@ -6,6 +6,9 @@ import Register from './Pages/Register'
 import Login from './Pages/Login'
 import Home from './Pages/Home'
 import { PrivateRoute, PublicRoute } from './components/RouteGuards'
+import Products from './Pages/Products'
+import AddProduct from './Pages/AddProduct'
+import EditProduct from './Pages/EditProduct'
 
 const router = createBrowserRouter([
   {
@@ -18,6 +21,38 @@ const router = createBrowserRouter([
       },
       {
         path: '/home',
+        element: (
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: '/products',
+        element: (
+          <PrivateRoute>
+            <Products />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: '/product/add',
+        element: (
+          <PrivateRoute>
+            <AddProduct />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: '/products/edit/:id',
+        element: (
+          <PrivateRoute>
+            <EditProduct />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: '/',
         element: (
           <PrivateRoute>
             <Home />
