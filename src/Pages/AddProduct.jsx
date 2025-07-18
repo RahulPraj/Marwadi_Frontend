@@ -7,10 +7,33 @@ export default function AddProduct() {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
-   
+    e.preventDefault();
+
+    // 🔸 Get form data
+    const form = e.target;
+    const name = form.name.value;
+    const description = form.description.value;
+    const price = parseFloat(form.price.value);
+    const image = form.image.value;
+    const stock = 200;
+
+    try {
+      setLoading(true);
+
+      // 🔸 API Call
+      await addProduct({ name, description, price, image, stock });
+
+      // 🔸 Redirect after success
+      navigate('/products');
+    } catch (error) {
+      console.error('Failed to create product:', error);
+      alert('Failed to create product');
+    } finally {
+      setLoading(false);
+    }
   }
 
- return(
+  return(
     <div className="min-h-screen bg-gradient-to-r from-gray-50 to-indigo-50 py-10 px-4 sm:px-6 lg:px-8">
   <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md">
     <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6">Add New Product</h1>
@@ -100,4 +123,5 @@ export default function AddProduct() {
 </div>
 
   )
+   
 }

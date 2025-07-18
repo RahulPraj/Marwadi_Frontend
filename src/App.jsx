@@ -9,6 +9,8 @@ import { PrivateRoute, PublicRoute } from './components/RouteGuards'
 import Products from './Pages/Products'
 import AddProduct from './Pages/AddProduct'
 import EditProduct from './Pages/EditProduct'
+import Cart from './Pages/Cart'
+
 
 const router = createBrowserRouter([
   {
@@ -21,38 +23,6 @@ const router = createBrowserRouter([
       },
       {
         path: '/home',
-        element: (
-          <PrivateRoute>
-            <Home />
-          </PrivateRoute>
-        )
-      },
-      {
-        path: '/products',
-        element: (
-          <PrivateRoute>
-            <Products />
-          </PrivateRoute>
-        )
-      },
-      {
-        path: '/product/add',
-        element: (
-          <PrivateRoute>
-            <AddProduct />
-          </PrivateRoute>
-        )
-      },
-      {
-        path: '/products/edit/:id',
-        element: (
-          <PrivateRoute>
-            <EditProduct />
-          </PrivateRoute>
-        )
-      },
-      {
-        path: '/',
         element: (
           <PrivateRoute>
             <Home />
@@ -74,10 +44,43 @@ const router = createBrowserRouter([
             <Register />
           </PublicRoute>
         )
-      }
+      },
+      {
+        path: '/products',
+        element: (
+          <PrivateRoute>
+            <Products />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: '/product/add',
+        element: (
+          <PrivateRoute>
+            <AddProduct />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: '/cart',
+        element: (
+          <PrivateRoute>
+            <Cart />
+          </PrivateRoute>
+        )
+      },
+      {
+    path: '/products/edit/:id',  // ✅ Newly added route
+    element: (
+      <PrivateRoute>
+        <EditProduct />
+      </PrivateRoute>
+    )
+  },  
     ]
   }
 ]);
+
 
 function App() {
   return (
