@@ -1,8 +1,7 @@
-// ... your imports remain the same
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Trash2, Plus, Minus } from 'lucide-react';
-import { getCart, removeFromCart, updateQuantity } from '../api/cart'; // makePayment removed for now
+import { getCart, removeFromCart, updateQuantity,makePayment } from '../api/cart'; // makePayment removed for now
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -73,10 +72,23 @@ export default function Cart() {
     );
   };
 
-  // 🔕 Disable actual payment logic for now
-  const handleCheckout = () => {
-    alert("⚠️ Payment feature coming soon!");
-  };
+ const handleCheckout = async () => {
+  try {
+    setIsPaying(true);
+    const res = await makePayment();
+    if (res?.url) {
+      window.location.href = res.url; // Redirect to Stripe
+    } else {
+      alert("Stripe did not return a valid URL");
+    }
+  } catch (err) {
+    console.error("Payment Error:", err.message);
+    alert("Payment failed. Check console for more details.");
+  } finally {
+    setIsPaying(false);
+  }
+};
+
 
   if (cart.length === 0) {
     return (
@@ -103,10 +115,10 @@ export default function Cart() {
       <div className="max-w-7xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Shopping Cart</h1>
 
-        {/* 💡 Note about payment */}
+        {/* 💡 Note about payment
         <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-3 rounded mb-6">
           💡 <span className="font-semibold">Note:</span> Payment gateway integration is in progress. All other features are functional.
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -177,12 +189,14 @@ export default function Cart() {
 
                 {/* 🔕 Disabled Payment Button */}
                 <button
-                  onClick={handleCheckout}
-                  className="w-full bg-gray-300 text-gray-600 cursor-not-allowed py-2 px-4 rounded mt-6"
-                  disabled
+                onClick={handleCheckout}
+                className={`w-full py-2 px-4 rounded mt-6 text-white font-semibold transition 
+                    ${isPaying ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}`}
+                disabled={isPaying}
                 >
-                  Make Payment (Coming Soon)
+                {isPaying ? "Processing..." : "Make Payment"}
                 </button>
+
               </div>
             </div>
           </div>

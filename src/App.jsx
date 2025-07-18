@@ -11,7 +11,8 @@ import AddProduct from './Pages/AddProduct'
 import EditProduct from './Pages/EditProduct'
 import Cart from './Pages/Cart'
 
-
+import Success from './pages/Succes'
+import Cancel from './Pages/Cancel'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -77,9 +78,26 @@ const router = createBrowserRouter([
       </PrivateRoute>
     )
   },  
+  {
+    path: '/success',  // ✅ Newly added route
+    element: (
+      <PrivateRoute>
+        <Success />
+      </PrivateRoute>
+    )
+  },
+  {
+    path: '/cancel',  // ✅ Newly added route
+    element: (
+      <PrivateRoute>
+        <Cancel />
+      </PrivateRoute>
+    )
+  },
     ]
   }
 ]);
+
 
 
 function App() {
